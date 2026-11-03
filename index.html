@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b1c34">
+  <meta name="description" content="AeroRisk AI: prototipo académico de simulación de riesgos de vuelo con regresión logística entrenada en Scikit-Learn.">
+  <title>AeroRisk AI | Simulador Predictivo de Seguridad Aérea</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="assets/model.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-plane" viewBox="0 0 24 24"><path d="M21 3 3 10.2l7.5 2.1 2.2 7.7L21 3Z"/><path d="m10.5 12.3 4.2-4.2M12.7 20l2.1-8.9"/></symbol>
+    <symbol id="i-dashboard" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18M7 16l4-5 3 2 5-7"/><path d="M16 6h3v3"/></symbol>
+    <symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/></symbol>
+    <symbol id="i-brain" viewBox="0 0 24 24"><path d="M12 6a4 4 0 0 0-7.3-2.1 4.8 4.8 0 0 0-1 7 5 5 0 0 0 .7 8.7A4.2 4.2 0 0 0 12 18V6ZM12 6a4 4 0 0 1 7.3-2.1 4.8 4.8 0 0 1 1 7 5 5 0 0 1-.7 8.7A4.2 4.2 0 0 1 12 18V6Z"/><path d="M8 10c2 0 4 2 4 4m4-4c-2 0-4 2-4 4"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M20 18a4 4 0 0 0 0-8 6 6 0 0 0-11.5-1A4.5 4.5 0 0 0 7.5 18H20Z"/><path d="M8 21l2-3m3 3 2-3"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2 20 6v6c0 5.2-3 8.4-8 10-5-1.6-8-4.8-8-10V6l8-4Z"/><path d="m8 12 3 3 5-6"/></symbol>
+    <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.5 6.5a5 5 0 0 0-6.7 6.6L3 18l3 3 4.9-4.8a5 5 0 0 0 6.6-6.7L14 13l-3-3 3.5-3.5Z"/></symbol>
+    <symbol id="i-rotate" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 2.7-6.4L3 8M3 3v5h5"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="m12 3 10 18H2L12 3Z"/><path d="M12 9v5m0 3v.1"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 2.5 2.5L16 9"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-8v.1"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></symbol>
+  </svg>
+  <a class="skip-link" href="#simulador">Saltar al simulador</a>
+
+  <div class="layout" id="appShell">
+    <aside class="sidebar" id="sidebar" aria-label="Navegación principal">
+      <a class="brand" href="#inicio" aria-label="AeroRisk AI, inicio">
+        <span class="brand-mark"><svg class="icon" aria-hidden="true"><use href="#i-plane"></use></svg></span>
+        <span><strong>AERORISK<span class="brand-dot">.</span></strong><small>AVIATION INTELLIGENCE</small></span>
+      </a>
+      <div class="side-divider"></div>
+      <div class="nav-caption">PLATAFORMA</div>
+      <nav class="side-nav">
+        <a href="#inicio" class="nav-link active"><svg class="icon"><use href="#i-dashboard"></use></svg> Dashboard</a>
+        <a href="#simulador" class="nav-link"><svg class="icon"><use href="#i-plane"></use></svg> Simulador de vuelo</a>
+        <a href="#comparativa" class="nav-link"><svg class="icon"><use href="#i-chart"></use></svg> Comparativa</a>
+        <a href="#factores" class="nav-link"><svg class="icon"><use href="#i-brain"></use></svg> Factores predictivos</a>
+      </nav>
+      <div class="nav-caption subcaption">INFORMACIÓN</div>
+      <nav class="side-nav">
+        <a href="#metodologia" class="nav-link"><svg class="icon"><use href="#i-info"></use></svg> Modelo y metodología</a>
+        <a href="#datos" class="nav-link"><svg class="icon"><use href="#i-database"></use></svg> Dataset histórico</a>
+      </nav>
+      <div class="side-bottom">
+        <div class="status-panel"><span class="status-illustration"><svg class="icon"><use href="#i-shield"></use></svg></span><span><strong>Modelo disponible</strong><small><span class="online-dot"></span> Motor predictivo activo</small></span></div>
+        <p>PLATAFORMA DEMOSTRATIVA<br>Regresión logística · Scikit-Learn</p>
+      </div>
+    </aside>
+
+    <div class="mobile-backdrop" id="mobileBackdrop" hidden></div>
+
+    <main class="main" id="inicio">
+      <header class="topbar">
+        <div class="topbar-left"><button class="mobile-menu-btn" id="mobileMenu" type="button" aria-label="Abrir menú" aria-controls="sidebar" aria-expanded="false"><svg class="icon"><use href="#i-menu"></use></svg></button><span class="breadcrumbs">Plataforma <span>/</span> <strong>Centro de simulación</strong></span></div>
+        <div class="topbar-right"><span class="environment"><span class="env-dot"></span> AMBIENTE ACADÉMICO</span><span class="avatar" title="AeroRisk AI">AR</span></div>
+      </header>
+
+      <div class="content">
+        <section class="hero" aria-label="Presentación del proyecto">
+          <div class="hero-copy"><div class="eyebrow"><span class="eyebrow-mark"></span> INTELIGENCIA PREDICTIVA AERONÁUTICA</div><h1>Decisiones más informadas.<br><span>Vuelos más seguros.</span></h1><p>Explora cómo un modelo de Machine Learning identifica patrones de riesgo a partir de datos históricos de aeronaves.</p><div class="hero-tags"><span><svg class="icon"><use href="#i-brain"></use></svg> REGRESIÓN LOGÍSTICA</span><span><svg class="icon"><use href="#i-database"></use></svg> 20 VUELOS HISTÓRICOS</span></div></div>
+          <div class="hero-visual" aria-hidden="true"><div class="radar radar-one"></div><div class="radar radar-two"></div><div class="radar radar-three"></div><div class="radar-sweep"></div><svg class="hero-airplane" viewBox="0 0 160 160"><path d="m80 5 12 59 45 34v13l-47-15v38l17 12v9l-27-7-27 7v-9l17-12V96l-47 15V98l45-34L80 5Z"/></svg><span class="radar-point p1"></span><span class="radar-point p2"></span><span class="radar-point p3"></span></div>
+        </section>
+
+        <div class="section-head intro-head"><div><div class="overline">MONITOREO PREDICTIVO</div><h2>Resumen de la simulación</h2></div><span class="time-pill"><svg class="icon"><use href="#i-clock"></use></svg> Actualización en tiempo real</span></div>
+        <section class="kpi-grid" aria-label="Indicadores del escenario">
+          <article class="kpi-card"><div class="kpi-head"><span>Prob. de accidente</span><span class="kpi-icon danger"><svg class="icon"><use href="#i-alert"></use></svg></span></div><strong class="kpi-number" id="kpiAccident">—</strong><div class="kpi-foot"><span class="kpi-dot orange"></span> Estimación del modelo</div></article>
+          <article class="kpi-card"><div class="kpi-head"><span>Prob. sin accidente</span><span class="kpi-icon positive"><svg class="icon"><use href="#i-shield"></use></svg></span></div><strong class="kpi-number" id="kpiSafe">—</strong><div class="kpi-foot"><span class="kpi-dot teal"></span> Complemento estimado</div></article>
+          <article class="kpi-card"><div class="kpi-head"><span>Nivel estimado</span><span class="kpi-icon neutral"><svg class="icon"><use href="#i-chart"></use></svg></span></div><strong class="kpi-number risk-text" id="kpiLevel">—</strong><div class="kpi-foot"><span class="kpi-dot sky"></span> Umbrales ilustrativos</div></article>
+          <article class="kpi-card"><div class="kpi-head"><span>Base de entrenamiento</span><span class="kpi-icon purple"><svg class="icon"><use href="#i-database"></use></svg></span></div><strong class="kpi-number">20 <span class="kpi-unit">vuelos</span></strong><div class="kpi-foot"><span class="kpi-dot purple-dot"></span> Dataset ficticio</div></article>
+        </section>
+
+        <section id="simulador" class="sim-section">
+          <div class="section-head"><div><div class="overline">01 / SIMULADOR INTERACTIVO</div><h2>Configura tu escenario de vuelo</h2><p>Modifica los parámetros para observar cómo responde el modelo.</p></div><span class="section-pill">4 VARIABLES DE ENTRADA</span></div>
+          <div class="sim-grid">
+            <section class="panel controls-card" aria-labelledby="params-heading">
+              <div class="panel-heading"><div><h3 id="params-heading">Parámetros de la aeronave</h3><p>Personaliza las características del vuelo.</p></div><span class="edit-chip">EDITABLE</span></div>
+              <div class="scenarios-quick"><span class="field-label">Cargar escenario de ejemplo</span><div class="quick-buttons"><button type="button" class="quick-btn active" data-scenario="A">Vuelo A</button><button type="button" class="quick-btn" data-scenario="B">Vuelo B</button><button type="button" class="quick-btn" data-scenario="C">Vuelo C</button><button type="button" class="reset-btn" id="resetBtn" title="Restablecer al Vuelo A" aria-label="Restablecer al Vuelo A"><svg class="icon"><use href="#i-rotate"></use></svg></button></div></div>
+              <form id="flightForm" novalidate>
+                <div class="form-group"><div class="field-header"><label for="ageNumber">Antigüedad del avión</label><span class="field-measure">AÑOS</span></div><div class="range-row"><input id="ageRange" type="range" min="0" max="35" value="3" step="1" aria-label="Antigüedad del avión en años"><div class="number-shell"><input id="ageNumber" type="number" min="0" max="35" step="1" value="3" inputmode="numeric" aria-describedby="ageHelp"><span>años</span></div></div><div class="range-extremes"><span>0 años</span><span>35 años</span></div><small class="form-help" id="ageHelp">Tiempo transcurrido desde la fabricación.</small></div>
+                <div class="form-group"><div class="field-header"><label for="hoursNumber">Horas de vuelo acumuladas</label><span class="field-measure">HORAS</span></div><div class="range-row"><input id="hoursRange" type="range" min="0" max="40000" value="2500" step="100" aria-label="Horas de vuelo acumuladas"><div class="number-shell"><input id="hoursNumber" type="number" min="0" max="40000" step="100" value="2500" inputmode="numeric" aria-describedby="hoursHelp"><span>h</span></div></div><div class="range-extremes"><span>0 h</span><span>40,000 h</span></div><small class="form-help" id="hoursHelp">Horas de operación registradas de la aeronave.</small></div>
+                <div class="form-group"><div class="field-header"><span class="field-label" id="weatherLabel">Condiciones meteorológicas</span></div><div class="choice-grid" role="group" aria-labelledby="weatherLabel"><button type="button" class="choice active" data-field="clima" data-value="0" aria-pressed="true"><svg class="icon"><use href="#i-sun"></use></svg><strong>Favorable</strong><small>Clima 0</small></button><button type="button" class="choice" data-field="clima" data-value="1" aria-pressed="false"><svg class="icon"><use href="#i-cloud"></use></svg><strong>Adverso</strong><small>Clima 1</small></button></div></div>
+                <div class="form-group maintenance-group"><div class="field-header"><span class="field-label" id="maintenanceLabel">Estado de mantenimiento</span></div><div class="choice-grid" role="group" aria-labelledby="maintenanceLabel"><button type="button" class="choice active" data-field="mantenimiento" data-value="1" aria-pressed="true"><svg class="icon"><use href="#i-check"></use></svg><strong>Al día</strong><small>Estado 1</small></button><button type="button" class="choice" data-field="mantenimiento" data-value="0" aria-pressed="false"><svg class="icon"><use href="#i-wrench"></use></svg><strong>No al día</strong><small>Estado 0</small></button></div></div>
+                <button class="simulate-button" type="submit"><svg class="icon"><use href="#i-chart"></use></svg> Simular probabilidad <svg class="icon right-arrow"><use href="#i-arrow"></use></svg></button>
+                <p class="automatic-note"><svg class="icon"><use href="#i-info"></use></svg> Los resultados también cambian automáticamente al modificar los datos.</p>
+              </form>
+            </section>
+
+            <div class="results-column">
+              <section class="panel result-card" aria-labelledby="result-heading">
+                <div class="result-top"><div><div class="result-eyebrow">RESULTADO DEL MODELO</div><h3 id="result-heading">Predicción del escenario</h3><p id="scenarioDescription">Vuelo A · Condiciones de referencia</p></div><span class="model-live"><span></span> MODELO ACTIVO</span></div>
+                <div class="result-display"><div class="gauge-wrap"><svg class="risk-gauge" viewBox="0 0 240 240" role="img" aria-label="Gráfico circular de la probabilidad estimada"><circle class="gauge-bg" cx="120" cy="120" r="91"/><circle class="gauge-track" cx="120" cy="120" r="91"/><circle class="gauge-progress" id="gaugeProgress" cx="120" cy="120" r="91"/></svg><div class="gauge-inside"><span>PROBABILIDAD</span><strong id="gaugeValue" aria-live="polite">—</strong><small>de accidente estimada</small></div></div><div class="result-aside"><span class="result-label">CLASIFICACIÓN</span><div class="risk-badge low" id="riskBadge"><span class="risk-badge-dot"></span><span id="riskBadgeText">—</span></div><p id="riskSummary">Selecciona los parámetros para explorar la predicción.</p><div class="micro-facts"><div><span>Vuelo analizado</span><strong id="flightName">Vuelo A</strong></div><div><span>Motor predictivo</span><strong>Regresión logística</strong></div></div></div></div>
+                <div class="risk-scale-block"><div class="scale-titles"><span>ESCALA DE RIESGO ILUSTRATIVA</span><span id="scalePercent">—</span></div><div class="risk-scale"><div class="risk-segment scale-low"></div><div class="risk-segment scale-medium"></div><div class="risk-segment scale-high"></div><span class="risk-pointer" id="riskPointer"></span></div><div class="risk-scale-labels"><span>Bajo · &lt;20%</span><span>Moderado · 20–49%</span><span>Elevado · ≥50%</span></div></div>
+              </section>
+              <section class="panel action-card" aria-labelledby="recommendation-heading"><span class="action-symbol"><svg class="icon"><use href="#i-shield"></use></svg></span><div><div class="result-eyebrow">RECOMENDACIÓN EMPRESARIAL</div><h3 id="recommendation-heading">Acción sugerida</h3><p id="recommendationText">Cargando recomendación...</p><div class="action-tags" id="actionTags"></div></div></section>
+              <section class="panel counter-card"><div class="counter-icon"><svg class="icon"><use href="#i-wrench"></use></svg></div><div class="counter-body"><div class="result-eyebrow">ANÁLISIS «¿QUÉ PASARÍA SI...?»</div><h3>Impacto del mantenimiento</h3><p id="counterText">Calculando el efecto estimado del mantenimiento...</p></div><strong id="counterDiff">—</strong></section>
+            </div>
+          </div>
+        </section>
+
+        <section id="comparativa" class="comparison-section"><div class="section-head"><div><div class="overline">02 / ESCENARIOS PREDEFINIDOS</div><h2>Comparación de vuelos</h2><p>Los escenarios A, B y C corresponden exactamente al enunciado académico.</p></div><span class="section-pill"><svg class="icon"><use href="#i-chart"></use></svg> COMPARATIVA</span></div><div class="scenario-grid" id="scenarioCards" aria-label="Comparación de probabilidades"></div><div class="comparison-foot"><svg class="icon"><use href="#i-info"></use></svg> Haz clic en «Analizar este vuelo» para cargar sus datos en el simulador. Las barras muestran probabilidades estimadas, no riesgos certificados.</div></section>
+
+        <section id="factores" class="factors-section"><div class="section-head"><div><div class="overline">03 / INTERPRETACIÓN DEL MODELO</div><h2>¿Qué factores influyen en el resultado?</h2><p>Contribuciones al puntaje interno de regresión logística para el escenario actual.</p></div></div><div class="factors-layout"><div class="panel factors-card"><div class="factor-headings"><span>FACTOR</span><span>IMPACTO SOBRE EL PUNTAJE</span></div><div id="contributionRows"></div><div class="factor-legend"><span><i class="legend-dash safe-dash"></i> Reduce el puntaje</span><span><i class="legend-dash risky-dash"></i> Aumenta el puntaje</span></div></div><div class="panel factors-explainer"><div class="explain-icon"><svg class="icon"><use href="#i-brain"></use></svg></div><h3>Interpretar la predicción</h3><p>El modelo combina cuatro variables: <strong>antigüedad, clima, horas de vuelo y mantenimiento</strong>. Cada una aporta al resultado de la regresión logística.</p><div class="explainer-line"></div><strong class="explain-highlight">Importante</strong><p>Estas barras muestran contribuciones en <em>log-odds</em>, no cambios porcentuales directos ni relaciones de causa y efecto.</p></div></div></section>
+
+        <section id="metodologia" class="method-section"><div class="section-head"><div><div class="overline">04 / TRANSPARENCIA</div><h2>Modelo y metodología</h2><p>Información que permite explicar y defender el prototipo durante la exposición.</p></div></div><div class="method-grid"><article class="method-card"><span class="method-index">01</span><svg class="icon"><use href="#i-database"></use></svg><h3>Datos de entrenamiento</h3><p>20 vuelos históricos ficticios: <strong>8 con accidente y 12 sin accidente</strong>. Se usan cuatro variables numéricas y binarias.</p></article><article class="method-card"><span class="method-index">02</span><svg class="icon"><use href="#i-brain"></use></svg><h3>Algoritmo</h3><p><strong>StandardScaler + LogisticRegression</strong> de Scikit-Learn. Los parámetros entrenados se exportan a JavaScript para realizar cálculos en el navegador.</p></article><article class="method-card"><span class="method-index">03</span><svg class="icon"><use href="#i-chart"></use></svg><h3>Validación académica</h3><p id="validationText">Se evaluó mediante Leave-One-Out. La muestra reducida impide considerar el desempeño como evidencia de fiabilidad real.</p></article></div><div class="warning-box"><svg class="icon"><use href="#i-alert"></use></svg><div><strong>Prototipo exclusivamente académico</strong><p>El dataset es ficticio y demasiado pequeño para decisiones aeronáuticas. Las estimaciones no están calibradas ni validadas para su uso operativo. Las acciones sugeridas son orientativas para la demostración.</p></div></div></section>
+
+        <section id="datos" class="dataset-section"><div class="section-head"><div><div class="overline">05 / REGISTROS DE ORIGEN</div><h2>Dataset histórico del ejercicio</h2><p>Los mismos 20 registros utilizados para entrenar el modelo.</p></div><a class="download-btn" href="data/vuelos_historicos.csv" download><svg class="icon"><use href="#i-download"></use></svg> Descargar CSV</a></div><div class="panel dataset-panel"><div class="dataset-top"><span><span class="online-dot"></span> Dataset cargado</span><span>20 REGISTROS · 5 COLUMNAS</span></div><div class="table-scroll"><table><thead><tr><th>Vuelo</th><th>Antigüedad (años)</th><th>Clima</th><th>Horas de vuelo</th><th>Mantenimiento</th><th>Accidente</th></tr></thead><tbody id="dataBody"></tbody></table></div></div></section>
+        <footer class="site-footer"><span>© 2026 AERORISK AI · PROTOTIPO EDUCATIVO</span><span>Machine Learning aplicado al análisis de riesgos aeronáuticos</span></footer>
+      </div>
+    </main>
+  </div>
+  <noscript><p class="noscript">Este simulador necesita JavaScript activado para funcionar.</p></noscript>
+</body>
+</html>
